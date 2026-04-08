@@ -26,6 +26,7 @@ body {
     linear-gradient(180deg, #f9f4ea 0%, var(--bg) 100%);
   color: var(--text);
   font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  overflow-x: hidden;
 }
 
 .page-shell {
@@ -131,6 +132,10 @@ h2 {
   gap: 16px;
   align-items: flex-start;
   margin-bottom: 18px;
+}
+
+.section-heading > div {
+  min-width: 0;
 }
 
 .secondary-link,
@@ -241,6 +246,7 @@ h2 {
   border: 1px solid var(--border);
   font-family: "Avenir Next", "Helvetica Neue", sans-serif;
   font-size: 0.92rem;
+  overflow-wrap: anywhere;
 }
 
 .preview-row strong {
@@ -431,5 +437,153 @@ th {
 
   .section-heading {
     flex-direction: column;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-shell {
+    padding: 20px 14px 36px;
+  }
+
+  .hero-copy,
+  .hero-panel,
+  .card {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 11vw, 3.4rem);
+    line-height: 0.98;
+  }
+
+  h2 {
+    font-size: 1.45rem;
+  }
+
+  .lede {
+    font-size: 1rem;
+  }
+
+  .episode-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 15px;
+  }
+
+  .page-shell {
+    padding: 14px 10px 28px;
+  }
+
+  .hero {
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .hero-copy,
+  .hero-panel,
+  .card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .layout,
+  .summary-grid {
+    gap: 14px;
+  }
+
+  .upload-box {
+    min-height: 122px;
+    padding: 18px;
+  }
+
+  .dataset-meta,
+  .slider-row,
+  .assumption-strip > div,
+  .episode-card,
+  .insight-item,
+  .csv-format {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .secondary-link,
+  .ghost-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .meta-value {
+    font-size: 1.1rem;
+  }
+
+  .stat-card {
+    min-height: auto;
+  }
+
+  .stat-card h3 {
+    font-size: 1.9rem;
+  }
+
+  .preview-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .episode-header,
+  .metric-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  .table-wrap {
+    overflow-x: visible;
+  }
+
+  tbody tr {
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid rgba(91, 67, 34, 0.12);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.56);
+  }
+
+  tbody td {
+    padding: 6px 0;
+    white-space: normal;
+    border-bottom: 0;
+  }
+
+  tbody td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 }

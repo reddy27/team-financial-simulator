@@ -241,12 +241,12 @@ function renderTable(results) {
             : "Monitor, lower immediate ROI";
 
       tr.innerHTML = `
-        <td>${row.episode_category}</td>
-        <td>${row.cases}</td>
-        <td>${formatCurrency(row.baseline)}</td>
-        <td>${formatCurrency(row.scenario)}</td>
-        <td>${formatCurrency(row.improvement)}</td>
-        <td>${signal}</td>
+        <td data-label="Episode">${row.episode_category}</td>
+        <td data-label="Cases">${row.cases}</td>
+        <td data-label="Baseline">${formatCurrency(row.baseline)}</td>
+        <td data-label="Scenario">${formatCurrency(row.scenario)}</td>
+        <td data-label="Improvement">${formatCurrency(row.improvement)}</td>
+        <td data-label="Priority Signal">${signal}</td>
       `;
       elements.resultsTable.appendChild(tr);
     });
