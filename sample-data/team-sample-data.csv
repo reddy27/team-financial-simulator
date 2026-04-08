@@ -1,0 +1,5 @@
+episode_category,cases,avg_spend,target_price,snf_rate,home_health_rate,home_rate,readmission_rate,quality_score
+LEJR,180,25500,24800,0.34,0.41,0.25,0.082,0.66
+Spinal Fusion,72,38200,36500,0.29,0.38,0.33,0.109,0.61
+CABG,54,59400,57200,0.42,0.31,0.27,0.128,0.58
+Major Bowel,60,44600,42900,0.37,0.30,0.33,0.117,0.60

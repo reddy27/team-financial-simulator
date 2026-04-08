@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TEAM Financial Simulator MVP</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">TEAM Financial Operating Software</p>
+          <h1>TEAM Financial Simulator MVP</h1>
+          <p class="lede">
+            A finance-first prototype for hospitals to estimate TEAM exposure,
+            compare scenarios, and identify the levers most likely to move
+            reconciliation outcomes.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <p class="panel-label">MVP Scope</p>
+          <ul class="panel-list">
+            <li>CSV upload for historical episode assumptions</li>
+            <li>Baseline reconciliation estimate by episode</li>
+            <li>Scenario modeling for discharge, readmissions, and quality</li>
+            <li>Executive summary output for finance teams</li>
+          </ul>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="card controls-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Data Input</p>
+              <h2>Hospital Dataset</h2>
+            </div>
+            <a class="secondary-link" href="./sample-data/team-sample-data.csv" download>
+              Download sample CSV
+            </a>
+          </div>
+
+          <div class="upload-grid">
+            <label class="upload-box" for="csv-upload">
+              <input id="csv-upload" type="file" accept=".csv" />
+              <span class="upload-title">Upload TEAM episode CSV</span>
+              <span class="upload-caption">
+                Use the sample file format or keep the built-in sample dataset.
+              </span>
+            </label>
+
+            <div class="dataset-meta">
+              <div>
+                <p class="meta-label">Current dataset</p>
+                <p id="dataset-name" class="meta-value">Built-in sample hospital</p>
+              </div>
+              <div>
+                <p class="meta-label">Upload status</p>
+                <p id="upload-status" class="meta-value meta-value-small">Using built-in sample data</p>
+              </div>
+              <div>
+                <p class="meta-label">Rows loaded</p>
+                <p id="dataset-rows" class="meta-value">4</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="csv-format">
+            <p class="meta-label">Required columns</p>
+            <code>
+              episode_category,cases,avg_spend,target_price,snf_rate,home_health_rate,home_rate,readmission_rate,quality_score
+            </code>
+          </div>
+
+          <div class="preview-shell">
+            <p class="meta-label">Loaded row preview</p>
+            <div id="data-preview" class="data-preview"></div>
+          </div>
+        </section>
+
+        <section class="card controls-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Scenario Engine</p>
+              <h2>Adjust TEAM Levers</h2>
+            </div>
+            <button id="reset-scenario" class="ghost-button" type="button">
+              Reset scenario
+            </button>
+          </div>
+
+          <div class="slider-grid">
+            <label class="slider-row">
+              <span>Shift SNF discharges to home health</span>
+              <strong id="snf-to-hh-value">5 pts</strong>
+              <input id="snf-to-hh" type="range" min="0" max="20" step="1" value="5" />
+            </label>
+
+            <label class="slider-row">
+              <span>Shift SNF discharges to home self-care</span>
+              <strong id="snf-to-home-value">3 pts</strong>
+              <input id="snf-to-home" type="range" min="0" max="15" step="1" value="3" />
+            </label>
+
+            <label class="slider-row">
+              <span>Reduce readmission rate</span>
+              <strong id="readmission-value">1.5 pts</strong>
+              <input id="readmission-reduction" type="range" min="0" max="5" step="0.1" value="1.5" />
+            </label>
+
+            <label class="slider-row">
+              <span>Improve quality score</span>
+              <strong id="quality-value">0.08</strong>
+              <input id="quality-lift" type="range" min="0" max="0.2" step="0.01" value="0.08" />
+            </label>
+          </div>
+
+          <div class="assumption-strip">
+            <div>
+              <p class="meta-label">Cost assumptions</p>
+              <p>SNF shift lowers average spend by 6% of target. Home-health shift lowers spend by 3.5% of target.</p>
+            </div>
+            <div>
+              <p class="meta-label">Quality adjustment</p>
+              <p>Projected reconciliation is scaled by an outcome multiplier derived from quality score.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="summary-grid">
+          <article class="card stat-card accent-card">
+            <p class="meta-label">Baseline projected reconciliation</p>
+            <h3 id="baseline-total">$0</h3>
+            <p id="baseline-caption" class="stat-caption">Across loaded TEAM episodes</p>
+          </article>
+
+          <article class="card stat-card">
+            <p class="meta-label">Scenario projected reconciliation</p>
+            <h3 id="scenario-total">$0</h3>
+            <p id="scenario-caption" class="stat-caption">After scenario changes</p>
+          </article>
+
+          <article class="card stat-card">
+            <p class="meta-label">Projected improvement</p>
+            <h3 id="improvement-total">$0</h3>
+            <p id="improvement-caption" class="stat-caption">Change vs. baseline</p>
+          </article>
+        </section>
+
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Episode View</p>
+              <h2>Category Summary</h2>
+            </div>
+          </div>
+
+          <div id="episode-cards" class="episode-cards"></div>
+        </section>
+
+        <section class="card table-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Finance View</p>
+              <h2>Baseline vs Scenario Table</h2>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Episode</th>
+                  <th>Cases</th>
+                  <th>Baseline</th>
+                  <th>Scenario</th>
+                  <th>Improvement</th>
+                  <th>Priority Signal</th>
+                </tr>
+              </thead>
+              <tbody id="results-table"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card insights-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Executive Summary</p>
+              <h2>Recommended Next Steps</h2>
+            </div>
+          </div>
+          <div id="insights-list" class="insights-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
