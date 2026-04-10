@@ -1,17 +1,34 @@
 #!/usr/bin/env python3
 import json
+import os
 import sqlite3
 from contextlib import closing
-from datetime import datetime, timedelta
+from datetime import datetime
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "data" / "team_platform.db"
 STATIC_DIR = BASE_DIR / "static"
+
+
+def resolve_db_path():
+    # Prefer an explicit DB path when provided by the host.
+    explicit = os.environ.get("TEAM_DB_PATH")
+    if explicit:
+        return Path(explicit)
+
+    # Railway-style persistent volumes are commonly mounted under /app/data.
+    railway_data_dir = Path("/app/data")
+    if railway_data_dir.exists():
+        return railway_data_dir / "team_platform.db"
+
+    return BASE_DIR / "data" / "team_platform.db"
+
+
+DB_PATH = resolve_db_path()
 
 
 def now_iso():
@@ -26,6 +43,7 @@ def db_connection():
 
 
 def init_db():
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with db_connection() as conn:
         conn.executescript(
             """
@@ -466,6 +484,10 @@ class AppHandler(SimpleHTTPRequestHandler):
 
     def handle_api_get(self, parsed):
         with closing(db_connection()) as conn:
+            if parsed.path == "/api/health":
+                self.respond_json({"ok": True, "generated_at": now_iso()})
+                return
+
             if parsed.path == "/api/bootstrap":
                 self.respond_json(get_dashboard(conn))
                 return
@@ -625,8 +647,10 @@ class AppHandler(SimpleHTTPRequestHandler):
 
 def run():
     init_db()
-    server = ThreadingHTTPServer(("127.0.0.1", 8000), AppHandler)
-    print("TEAM platform running at http://127.0.0.1:8000")
+    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", "8000"))
+    server = ThreadingHTTPServer((host, port), AppHandler)
+    print(f"TEAM platform running at http://{host}:{port}")
     server.serve_forever()
 
 
