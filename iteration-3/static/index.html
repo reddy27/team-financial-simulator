@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TEAM Episode Platform</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar glass">
+        <div>
+          <p class="eyebrow">Transforming Episode Accountability Model</p>
+          <h1>TEAM Command Center</h1>
+          <p class="lede">Episode management, care coordination, quality tracking, and reconciliation in one clinical workspace.</p>
+        </div>
+        <div class="sidebar-section">
+          <label for="userSelect">Active Role</label>
+          <select id="userSelect"></select>
+        </div>
+        <div class="sidebar-section">
+          <button class="nav-chip active" data-view="dashboard">Operations</button>
+          <button class="nav-chip" data-view="episodes">Episodes</button>
+          <button class="nav-chip" data-view="analytics">Analytics</button>
+          <button class="nav-chip" data-view="network">Post-Acute Network</button>
+        </div>
+        <div class="sidebar-section sidebar-spotlight" id="spotlight"></div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Hospital-wide performance</p>
+            <h2>Care coordination with Apple-style clarity</h2>
+          </div>
+          <div class="topbar-actions">
+            <button id="refreshButton" class="secondary-button">Refresh</button>
+            <button id="scheduleButton" class="primary-button">Schedule Follow-Up</button>
+          </div>
+        </header>
+
+        <section id="dashboardView" class="view active">
+          <div id="summaryCards" class="summary-grid"></div>
+          <div class="hero-grid">
+            <section class="glass hero-card">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Priority Episodes</p>
+                  <h3>Risk-ranked care operations</h3>
+                </div>
+              </div>
+              <div id="episodeRail" class="episode-rail"></div>
+            </section>
+            <section class="glass hero-card compact">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">CMS readiness</p>
+                  <h3>Measure performance</h3>
+                </div>
+              </div>
+              <div id="analyticsCards" class="metric-stack"></div>
+            </section>
+          </div>
+          <div class="panel-grid">
+            <section class="glass">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Navigator worklist</p>
+                  <h3>Tasks and alerts</h3>
+                </div>
+              </div>
+              <div id="taskList" class="list-stack"></div>
+            </section>
+            <section class="glass">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Audit trail</p>
+                  <h3>Compliance timeline</h3>
+                </div>
+              </div>
+              <div id="auditList" class="list-stack"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="episodesView" class="view">
+          <div class="detail-layout">
+            <section class="glass detail-sidebar" id="episodeList"></section>
+            <section class="glass detail-main" id="episodeDetail"></section>
+          </div>
+        </section>
+
+        <section id="analyticsView" class="view">
+          <div class="panel-grid analytics-grid">
+            <section class="glass wide-chart">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">Financial & quality</p>
+                  <h3>Performance against PRD goals</h3>
+                </div>
+              </div>
+              <div id="goalBars" class="goal-bars"></div>
+            </section>
+            <section class="glass">
+              <div class="section-header">
+                <div>
+                  <p class="eyebrow">CMS export</p>
+                  <h3>Submission snapshot</h3>
+                </div>
+              </div>
+              <pre id="cmsReport" class="report-card"></pre>
+            </section>
+          </div>
+        </section>
+
+        <section id="networkView" class="view">
+          <section class="glass">
+            <div class="section-header">
+              <div>
+                <p class="eyebrow">Preferred network</p>
+                <h3>SNF / HHA scorecard</h3>
+              </div>
+            </div>
+            <div id="facilityGrid" class="facility-grid"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="followupDialog" class="glass dialog-card">
+      <form id="followupForm" method="dialog">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">New encounter</p>
+            <h3>Schedule a follow-up</h3>
+          </div>
+        </div>
+        <label>
+          Episode
+          <select id="followupEpisodeId"></select>
+        </label>
+        <label>
+          Date & time
+          <input id="followupDateTime" type="datetime-local" required />
+        </label>
+        <label>
+          Modality
+          <select id="followupModality">
+            <option value="video">Video</option>
+            <option value="audio">Audio Only</option>
+            <option value="in_person">In Person</option>
+          </select>
+        </label>
+        <label>
+          Summary
+          <textarea id="followupSummary" rows="4"></textarea>
+        </label>
+        <div class="dialog-actions">
+          <button type="button" class="secondary-button" id="cancelDialogButton">Cancel</button>
+          <button type="submit" class="primary-button">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <template id="badgeTemplate">
+      <span class="badge"></span>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
